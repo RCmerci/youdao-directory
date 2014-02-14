@@ -39,6 +39,18 @@ void argv_check(int argc,char **argv){
     }
 
 }
+void convert_space(char *p1){
+    char *p2,p3[100];
+    memset(p3,'\0',100);
+    if((p2=strtok(p1,"-"))==NULL)printf("NULL");
+    while(p2!=NULL){
+    strcat(p3,p2);
+    strcat(p3," ");
+    p2 = strtok(NULL,"-/;");
+    }
+    p3[strlen(p3)-1] = '\0';
+    memcpy(p1,p3,strlen(p3));
+}
 size_t write_func(char *ptr, size_t size, size_t nmemb, void *userdata){
     memcpy(userdata, ptr, size*nmemb);
     ((char *)userdata)[size*nmemb] = '\0';
@@ -53,6 +65,7 @@ void * trans_thread(void *unuse){
     }
     char buf[512],ret_buf[MAXBUF*2],*convert_str;
     sprintf(buf, "%s", APIkey);
+    convert_space(str_to_trans);
     convert_str = curl_easy_escape(curl,str_to_trans,strlen(str_to_trans));
     strcat(buf, convert_str);
     curl_easy_setopt(curl, CURLOPT_URL, buf);
